@@ -11,6 +11,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Fruit Flow',
       home: const MyHomePage(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
