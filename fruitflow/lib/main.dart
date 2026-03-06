@@ -1,27 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:fruitflow/core/router/app_router.dart';
 
-void main() {
-  runApp(const MyApp());
+Future<void> main() async {
+ runApp(const FruitFlowApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class FruitFlowApp extends StatelessWidget {
+  const FruitFlowApp({super.key});
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Fruit Flow',
-      home: const MyHomePage(),
+     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
+      title: 'FruitFlow',
+      routerConfig: appRouter,
     );
-  }
-}
-
-class MyHomePage extends StatelessWidget {
-  const MyHomePage();
-
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold();
   }
 }
