@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fruitflow/features/initial/presentation/cubit/splash_cubit.dart';
 import 'package:go_router/go_router.dart';
 import 'package:fruitflow/core/responsive/responsive_config.dart';
 import 'package:fruitflow/core/router/app_routes.dart';
-import 'package:fruitflow/features/initial/presentation/cubit/splash_cubit.dart';
 import 'package:fruitflow/features/initial/presentation/cubit/splash_state.dart';
 
 class SplashScreen extends StatelessWidget {
