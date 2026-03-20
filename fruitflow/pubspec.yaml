@@ -2,6 +2,7 @@ name: fruitflow
 description: "A new Flutter project."
 
 publish_to: 'none' 
+
 version: 1.0.0+1
 
 environment:
@@ -12,13 +13,15 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.8
-  go_router:
-  flutter_bloc:
-  
+  go_router: ^14.2.0
+  flutter_bloc: ^8.1.6
+  equatable: ^2.0.5
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
   flutter_lints: ^6.0.0
 
 flutter:

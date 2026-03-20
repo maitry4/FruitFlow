@@ -1,17 +1,34 @@
-abstract class SplashState {}
+part of 'splash_cubit.dart';
 
-class SplashInitial extends SplashState {}
+sealed class SplashState extends Equatable {
+  const SplashState();
 
-class SplashLoading extends SplashState {}
-
-class SplashReady extends SplashState {
-  final String assetPath;
-
-  SplashReady({required this.assetPath});
+  @override
+  List<Object> get props => [];
 }
 
-class SplashError extends SplashState {
+final class SplashInitial extends SplashState {}
+
+final class SplashLoading extends SplashState {}
+
+final class SplashReady extends SplashState {
+  final String assetPath;
+  final String targetRoute;
+
+  const SplashReady({
+    required this.assetPath,
+    required this.targetRoute,
+  });
+
+  @override
+  List<Object> get props => [assetPath, targetRoute];
+}
+
+final class SplashError extends SplashState {
   final String message;
 
-  SplashError({required this.message});
+  const SplashError({required this.message});
+
+  @override
+  List<Object> get props => [message];
 }

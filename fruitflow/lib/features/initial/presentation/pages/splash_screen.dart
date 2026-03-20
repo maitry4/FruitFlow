@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fruitflow/features/initial/presentation/cubit/splash_cubit.dart';
 import 'package:go_router/go_router.dart';
 import 'package:fruitflow/core/responsive/responsive_config.dart';
-import 'package:fruitflow/core/router/app_routes.dart';
-import 'package:fruitflow/features/initial/presentation/cubit/splash_state.dart';
+import 'package:fruitflow/features/initial/presentation/cubit/splash_cubit.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const _SplashView(); 
+    return const _SplashView();
   }
 }
 
@@ -40,15 +38,19 @@ class _SplashViewState extends State<_SplashView> {
       listener: (context, state) async {
         if (state is SplashReady) {
           await Future.delayed(const Duration(milliseconds: 2500));
-          if (context.mounted) context.goNamed(AppRoutes.onboarding);
+          if (context.mounted) context.goNamed(state.targetRoute);
         }
       },
       builder: (context, state) {
+        final theme = Theme.of(context);
+
         return Scaffold(
-          backgroundColor: Colors.black,
+          backgroundColor: theme.scaffoldBackgroundColor,
           body: switch (state) {
-            SplashReady(:final assetPath) => _SplashImage(assetPath: assetPath),
-            SplashError(:final message) => _SplashErrorView(message: message),
+            SplashReady(:final assetPath) =>
+              _SplashImage(assetPath: assetPath),
+            SplashError(:final message) =>
+              _SplashErrorView(message: message),
             _ => const SizedBox.expand(),
           },
         );
@@ -56,6 +58,10 @@ class _SplashViewState extends State<_SplashView> {
     );
   }
 }
+
+// ---------------------------------------------------------------------------
+// Splash image — responsive, theme-aware background
+// ---------------------------------------------------------------------------
 
 class _SplashImage extends StatelessWidget {
   final String assetPath;
@@ -69,10 +75,16 @@ class _SplashImage extends StatelessWidget {
 
     return Responsive(
       maxWidth: isLargeScreen ? AppBreakpoints.desktop : double.infinity,
-      child: SizedBox.expand(child: Image.asset(assetPath, fit: BoxFit.cover)),
+      child: SizedBox.expand(
+        child: Image.asset(assetPath, fit: BoxFit.cover),
+      ),
     );
   }
 }
+
+// ---------------------------------------------------------------------------
+// Error view — fully theme-driven, no hardcoded colors
+// ---------------------------------------------------------------------------
 
 class _SplashErrorView extends StatelessWidget {
   final String message;
@@ -81,20 +93,31 @@ class _SplashErrorView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.error_outline, color: Colors.red, size: 48),
+          Icon(
+            Icons.error_outline,
+            color: colorScheme.error,
+            size: 48,
+          ),
           const SizedBox(height: 12),
-          const Text(
+          Text(
             'Failed to load splash',
-            style: TextStyle(color: Colors.white, fontSize: 16),
+            style: theme.textTheme.bodyLarge?.copyWith(
+              color: colorScheme.onSurface,
+            ),
           ),
           const SizedBox(height: 8),
           Text(
             message,
-            style: const TextStyle(color: Colors.grey, fontSize: 12),
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: colorScheme.onSurface.withOpacity(0.6),
+            ),
             textAlign: TextAlign.center,
           ),
         ],
