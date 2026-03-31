@@ -2,11 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:fruitflow/core/router/app_router.dart';
+import 'package:fruitflow/core/services/hive_service.dart';
 import 'package:fruitflow/core/themes/light_theme.dart';
 import 'package:fruitflow/features/initial/presentation/cubit/splash_cubit.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   usePathUrlStrategy();
+
+  await HiveService.init();
+
   runApp(const FruitFlowApp());
 }
 
@@ -22,7 +27,7 @@ class FruitFlowApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp.router(
-        title: 'FruitFlow',
+        title: 'fruitflow',
         routerConfig: appRouter,
         theme: lightTheme,
         debugShowCheckedModeBanner: false,
