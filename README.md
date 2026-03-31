@@ -10,7 +10,7 @@ FruitFlow challenges players to sort fruit slabs into bottles following stacking
 
 ![UI Design Preview](ui_mockups/initial_ui_design.png)
 
----
+
 
 ## 🚀 Features
 
