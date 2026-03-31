@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:layered/features/game_map/presentation/cubit/game_map_cubit.dart';
-import 'package:layered/features/game_map/presentation/widgets/game_map_view.dart';
+import 'package:fruitflow/features/game_map/presentation/cubit/game_map_cubit.dart';
+import 'package:fruitflow/features/game_map/presentation/widgets/game_map_view.dart';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // GameMapScreen — route entry point; provides GameMapCubit to the tree.

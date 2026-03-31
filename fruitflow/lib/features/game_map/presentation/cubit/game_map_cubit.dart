@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:layered/core/services/hive_service.dart';
+import 'package:fruitflow/core/services/hive_service.dart';
 
 part 'game_map_state.dart';
 
