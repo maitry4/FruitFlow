@@ -1,4 +1,3 @@
-
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:layered/core/services/hive_service.dart';
@@ -11,10 +10,8 @@ part 'game_play_state.dart';
 class GamePlayCubit extends Cubit<GamePlayState> {
   GamePlayCubit() : super(const GamePlayLoading());
 
-  Future<void> loadLevel(int levelNumber) async {
   void loadLevel(int levelNumber) {
     emit(const GamePlayLoading());
-
     try {
       final level = LevelGenerator.generate(levelNumber);
       emit(GamePlayLoaded(level: level));
@@ -22,7 +19,6 @@ class GamePlayCubit extends Cubit<GamePlayState> {
       emit(GamePlayError(message: e.toString()));
     }
   }
-}
 
   void onTubeTapped(int index) {
     final currentState = state;
@@ -95,11 +91,11 @@ class GamePlayCubit extends Cubit<GamePlayState> {
   }
   void _handleWin(int currentLevel) {
     // Unlock next level in Hive
-    final nextLevel = currentLevel + 1;
-    if (nextLevel > HiveService.instance.unlockedUpTo) {
+    // final nextLevel = currentLevel + 1;
+    // if (nextLevel > HiveService.instance.unlockedUpTo) {
        // Assuming HiveService has a method to update progress
-       // HiveService.instance.saveProgress(nextLevel); 
-    }
+       HiveService.instance.unlockNextLevel(currentLevel); 
+    // }
     emit(GamePlayVictory(levelNumber: currentLevel));
   }
 }

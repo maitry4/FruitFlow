@@ -1,11 +1,13 @@
+import 'package:layered/features/game_play/domain/fruit_type.dart';
+
 class Tube {
   final int capacity;
-  final List<FruitType> slabs; // bottom → top
   final List<FruitType> slabs; // [0] is bottom, [last] is top
 
   Tube({required this.capacity, required List<FruitType> slabs})
       : slabs = List.unmodifiable(slabs);
- class Tube {
+
+  bool get isEmpty => slabs.isEmpty;
   bool get isFull => slabs.length == capacity;
   FruitType? get top => slabs.isNotEmpty ? slabs.last : null;
 
@@ -13,8 +15,6 @@ class Tube {
   bool get isComplete =>
       isFull && slabs.every((s) => s == slabs.first);
 
-  Tube copy() => Tube(capacity: capacity, slabs: List.from(slabs));
-}
   // A tube is "Sorted" (for win condition) if it is either totally empty 
   // or completely filled with the same fruit.
   bool get isSorted => isEmpty || isComplete;
