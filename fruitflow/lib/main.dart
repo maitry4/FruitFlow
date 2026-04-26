@@ -11,7 +11,6 @@ Future<void> main() async {
   usePathUrlStrategy();
 
   await HiveService.init();
-
   runApp(const FruitFlowApp());
 }
 

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class DotIndicators extends StatelessWidget {
   final int currentPage;
   final int kTotalOnboardingPages;
-  const DotIndicators({required this.currentPage, required this.kTotalOnboardingPages});
+  const DotIndicators({super.key, required this.currentPage, required this.kTotalOnboardingPages});
 
   @override
   Widget build(BuildContext context) {

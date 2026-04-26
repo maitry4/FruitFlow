@@ -12,8 +12,8 @@ class SplashCubit extends Cubit<SplashState> {
 
   String _resolveAsset(double screenWidth) {
     return screenWidth >= AppBreakpoints.mobile
-        ? 'assets/splash_desktop.webp'
-        : 'assets/splash_mobile.webp';
+        ? 'assets/splash/splash_desktop.webp'
+        : 'assets/splash/splash_mobile.webp';
   }
 
   Future<void> loadSplash(BuildContext context) async {

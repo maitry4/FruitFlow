@@ -4,7 +4,7 @@ class GlossyButton extends StatefulWidget {
   final String label;
   final VoidCallback onPressed;
 
-  const GlossyButton({required this.label, required this.onPressed});
+  const GlossyButton({super.key, required this.label, required this.onPressed});
 
   @override
   State<GlossyButton> createState() => _GlossyButtonState();

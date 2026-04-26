@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fruitflow/core/constants/app_colors.dart';
-
+// TODO: Not every color is coming from the theme file fix that later 
 final ThemeData lightTheme = ThemeData(
   useMaterial3: true,
   brightness: Brightness.light,
@@ -12,7 +12,7 @@ final ThemeData lightTheme = ThemeData(
     primaryContainer: AppColors.green100,
     onPrimaryContainer: AppColors.green900,
     primaryFixed: AppColors.green500,
-   
+    
     secondary:        AppColors.orange500,
     onSecondary:      AppColors.white,
     secondaryContainer: AppColors.orange100,

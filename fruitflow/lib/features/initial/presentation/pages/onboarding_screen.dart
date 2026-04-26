@@ -100,7 +100,7 @@ class _OnboardingPage extends StatelessWidget {
 
   String _assetPath(BuildContext context) {
     final suffix = Responsive.isMobile(context) ? '' : 'd';
-    return 'assets/ob${index + 1}$suffix.webp';
+    return 'assets/onboarding/ob${index + 1}$suffix.webp';
   }
 
   @override
@@ -114,13 +114,13 @@ class _OnboardingPage extends StatelessWidget {
         child: Image.asset(
           _assetPath(context),
           fit: BoxFit.fill,
-          errorBuilder: (_, __, ___) => ColoredBox(
+          errorBuilder: (_, _, _) => ColoredBox(
             color: Theme.of(context).colorScheme.surface,
             child: Center(
               child: Icon(
                 Icons.image_not_supported_outlined,
                 color: Theme.of(context).colorScheme.onSurface.withOpacity(0.4),
-                size: 48,
+                size: 30,
               ),
             ),
           ),

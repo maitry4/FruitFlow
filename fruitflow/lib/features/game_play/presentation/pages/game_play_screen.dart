@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:layered/core/responsive/responsive_config.dart';
-import 'package:layered/features/game_play/presentation/cubit/game_play_cubit.dart';
-import 'package:layered/features/game_play/presentation/widgets/game_play_board.dart';
+import 'package:fruitflow/core/responsive/responsive_config.dart';
+import 'package:fruitflow/core/router/app_routes.dart';
+import 'package:fruitflow/features/game_play/presentation/cubit/game_play_cubit.dart';
+import 'package:fruitflow/features/game_play/presentation/widgets/action_button.dart';
+import 'package:fruitflow/features/game_play/presentation/widgets/game_play_board.dart';
+import 'package:confetti/confetti.dart';
 
 class GamePlayScreen extends StatelessWidget {
   final int levelNumber;
@@ -15,7 +18,6 @@ class GamePlayScreen extends StatelessWidget {
     return BlocProvider(
       create: (_) => GamePlayCubit()..loadLevel(levelNumber),
       child: Scaffold(
-        // We use BlocListener for "one-time" side effects like navigation or dialogs
         body: BlocListener<GamePlayCubit, GamePlayState>(
           listener: (context, state) {
             if (state is GamePlayVictory) {
@@ -24,49 +26,40 @@ class GamePlayScreen extends StatelessWidget {
           },
           child: BlocBuilder<GamePlayCubit, GamePlayState>(
             builder: (context, state) {
-              return Stack(
-                children: [
-                  // 1. Background layer
-                  Positioned.fill(
-                    child: Image.asset(
-                      _backgroundAsset(context),
-                      fit: BoxFit.cover,
+              return TweenAnimationBuilder<double>(
+                duration: const Duration(milliseconds: 2000),
+                tween: Tween(begin: 1.1, end: 1.0),
+                builder: (context, scale, child) {
+                  return Transform.scale(scale: scale, child: child);
+                },
+                child: Stack(
+                  children: [
+                    Positioned.fill(
+                      child: Image.asset(
+                        _backgroundAsset(context),
+                        fit: BoxFit.cover,
+                      ),
                     ),
-                  ),
-
-                  // 2. Interactive layer
-                  switch (state) {
-                    GamePlayLoading() => const Center(
+                    
+                    switch (state) {
+                      GamePlayLoading() => const Center(
                         child: CircularProgressIndicator(color: Colors.white),
                       ),
-                    
-                    // Show board for both Loaded and Victory states
-                    GamePlayLoaded(:final level) => SafeArea(
-                        child: GamePlayBoard(level: level),
-                      ),
-                    
-                    // We keep the board visible even when victory state is reached
-                    // Note: This assumes GamePlayVictory also carries the level data
-                    // or the Cubit is designed to keep the last state.
-                    GamePlayVictory(:final levelNumber) => const Center(
-                      // You can add a confetti overlay here if desired
-                      child: SizedBox.shrink(), 
-                    ),
-
-                    GamePlayError(:final message) => Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: Text(
-                            'Failed to load level.\n$message',
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(color: Colors.white),
-                          ),
+                      GamePlayLoaded(:final level, :final selectedTubeIndex) =>
+                        GamePlayBoard(
+                          level: level,
+                          selectedIdx: selectedTubeIndex,
+                        ),
+                      GamePlayVictory() => const SizedBox.shrink(),
+                      GamePlayError(:final message) => Center(
+                        child: Text(
+                          message,
+                          style: const TextStyle(color: Colors.white),
                         ),
                       ),
-                  },
-                  
-                  
-                ],
+                    },
+                  ],
+                ),
               );
             },
           ),
@@ -76,40 +69,95 @@ class GamePlayScreen extends StatelessWidget {
   }
 
   void _showVictoryDialog(BuildContext context, int currentLevel) {
+    final confettiController = ConfettiController(
+      duration: const Duration(seconds: 3),
+    );
+
+    confettiController.play();
+
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (dialogContext) => AlertDialog(
-        backgroundColor: Colors.white.withOpacity(0.9),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text(
-          'Level Complete!',
-          textAlign: TextAlign.center,
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
-        ),
-        content: Text(
-          'You successfully sorted all the fruits in Level $currentLevel!',
-          textAlign: TextAlign.center,
-        ),
-        actionsAlignment: MainAxisAlignment.center,
-        actions: [
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.orangeAccent,
-              shape: StadiumBorder(),
-            ),
-            onPressed: () {
-              // Close dialog and navigate to next level
-              Navigator.of(dialogContext).pop();
-              context.pushReplacement('/game-map');
+      builder: (dContext) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          child: StatefulBuilder(
+            builder: (context, setState) {
+              return Stack(
+                alignment: Alignment.topCenter,
+                children: [
+                  // 🎉 Confetti
+                  Positioned.fill(
+                    child: ConfettiWidget(
+                      confettiController: confettiController,
+                      blastDirectionality: BlastDirectionality.explosive,
+                      shouldLoop: false,
+                      emissionFrequency: 0.05,
+                      numberOfParticles: 20,
+                      gravity: 0.3,
+                    ),
+                  ),
+
+                  // 💫 Main Card
+                  TweenAnimationBuilder<double>(
+                    duration: const Duration(milliseconds: 400),
+                    tween: Tween(begin: 0.8, end: 1.0),
+                    builder: (context, scale, child) {
+                      return Transform.scale(scale: scale, child: child);
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 60),
+                      padding: const EdgeInsets.fromLTRB(20, 70, 20, 20),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(24),
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Text(
+                            "Level Complete!",
+                            style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          const Text(
+                            "That was smooth...",
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                          const SizedBox(height: 20),
+
+                          SizedBox(
+                            width: 300,
+                            child: ActionButton(
+                              onTap: () {
+                                confettiController.stop();
+                                context.go(AppRoutes.gameMap);
+                              },
+                              child: const Text("Next Level"),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  // Orange Image (floating on top)
+                  Positioned(
+                    top: 0,
+                    child: Image.asset(
+                      'assets/play/win_orange.webp',
+                      height: 120,
+                    ),
+                  ),
+                ],
+              );
             },
-            child: const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: Text('Next Level', style: TextStyle(color: Colors.white)),
-            ),
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 

@@ -2,9 +2,9 @@
 
 import 'dart:math';
 
-import 'package:layered/features/game_play/domain/fruit_type.dart';
-import 'package:layered/features/game_play/domain/tube.dart';
-import 'package:layered/features/game_play/domain/ui_level.dart';
+import 'package:fruitflow/features/game_play/domain/fruit_type.dart';
+import 'package:fruitflow/features/game_play/domain/tube.dart';
+import 'package:fruitflow/features/game_play/domain/ui_level.dart';
 
 
 class LevelGenerator {
@@ -15,7 +15,7 @@ class LevelGenerator {
   // Only 1 extra empty tube for most difficulties.
   // High color counts need 2 to keep the puzzle solvable.
   static int _numEmptyTubes(int numColors) {
-    if (numColors >= 7) return 2;
+    if (numColors >= 3) return 2;
     return 1;
   }
 
@@ -64,7 +64,9 @@ class LevelGenerator {
     double total = 0.0;
     for (final tube in nonEmpty) {
       final counts = <FruitType, int>{};
-      for (final s in tube) counts[s] = (counts[s] ?? 0) + 1;
+      for (final s in tube) {
+        counts[s] = (counts[s] ?? 0) + 1;
+      }
       final maxCount = counts.values.reduce((a, b) => a > b ? a : b);
       total += maxCount / tube.length;
     }
@@ -122,7 +124,7 @@ class LevelGenerator {
 
         // Only allow pour onto matching color or empty — game rules
         if (tgt.isNotEmpty && tgt.last != color) continue;
-        // 🔥 NEW FIX — preserve required empty tubes
+        // preserve required empty tubes
 int emptyCount = tubes.where((t) => t.isEmpty).length;
 
 // If target is empty, make sure we don't consume the last required empty tubes

@@ -1,4 +1,4 @@
-import 'package:layered/features/game_play/domain/fruit_type.dart';
+import 'package:fruitflow/features/game_play/domain/fruit_type.dart';
 
 class Tube {
   final int capacity;

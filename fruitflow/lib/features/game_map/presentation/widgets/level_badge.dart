@@ -6,13 +6,11 @@ import 'package:flutter/material.dart';
 
 class LevelBadge extends StatelessWidget {
   final int number;
-  final bool isUnlocked;
   final double fontSize;
 
   const LevelBadge({
     super.key,
     required this.number,
-    required this.isUnlocked,
     required this.fontSize,
   });
 
@@ -26,12 +24,9 @@ class LevelBadge extends StatelessWidget {
         vertical: fontSize * 0.2,
       ),
       decoration: BoxDecoration(
-        color: isUnlocked
-            ? cs.primary.withOpacity(0.92)
-            : Colors.black.withOpacity(0.35),
+        color: cs.primary.withOpacity(0.92),
         borderRadius: BorderRadius.circular(fontSize),
         boxShadow: [
-          if (isUnlocked)
             BoxShadow(
               color: cs.primary.withOpacity(0.45),
               blurRadius: 6,
@@ -44,7 +39,7 @@ class LevelBadge extends StatelessWidget {
         style: TextStyle(
           fontSize: fontSize,
           fontWeight: FontWeight.w900,
-          color: isUnlocked ? cs.onPrimary : Colors.white54,
+          color:  cs.onPrimary,
           height: 1.0,
         ),
       ),

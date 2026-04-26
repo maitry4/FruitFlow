@@ -7,7 +7,7 @@ import 'package:fruitflow/features/initial/presentation/widgets/glossy_button.da
 class BottomControls extends StatelessWidget {
   final int currentPage;
   final int kTotalOnboardingPages;
-  const BottomControls({required this.currentPage, required this.kTotalOnboardingPages});
+  const BottomControls({super.key, required this.currentPage, required this.kTotalOnboardingPages});
 
   bool get _isLastPage => currentPage == kTotalOnboardingPages - 1;
 

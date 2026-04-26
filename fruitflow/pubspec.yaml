@@ -1,5 +1,5 @@
 name: fruitflow
-description: "A new Flutter project."
+description: "A cross-platform relaxing puzzle game that challenges players to sort fruit slabs into bottles following stacking rules across 100 progressively difficult levels — fully offline."
 
 publish_to: 'none' 
 
@@ -18,6 +18,7 @@ dependencies:
   equatable: ^2.0.5
   hive: ^2.2.3
   hive_flutter: ^1.1.0
+  confetti: ^0.8.0
 
 dev_dependencies:
   flutter_test:
@@ -30,3 +31,8 @@ flutter:
 
   assets:
     - assets/
+    - assets/fruits/
+    - assets/map/
+    - assets/onboarding/
+    - assets/play/
+    - assets/splash/

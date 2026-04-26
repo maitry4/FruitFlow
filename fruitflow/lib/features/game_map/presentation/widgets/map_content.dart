@@ -1,9 +1,8 @@
-// map_content.dart
-
 import 'package:flutter/material.dart';
 import 'package:fruitflow/core/responsive/responsive_config.dart';
 import 'package:fruitflow/features/game_map/presentation/constants/map_slot_positions.dart';
 import 'package:fruitflow/features/game_map/presentation/widgets/level_bottle.dart';
+import 'package:fruitflow/features/game_play/presentation/widgets/level_pill.dart';
 
 class MapContent extends StatefulWidget {
   final int unlockedUpTo;
@@ -34,8 +33,8 @@ class _MapContentState extends State<MapContent> {
   }
 
   String _bgAsset(BuildContext context) => Responsive.isMobile(context)
-      ? 'assets/game_map_background_mobile.webp'
-      : 'assets/game_map_background_desktop.webp';
+      ? 'assets/map/game_map_background_mobile.webp'
+      : 'assets/map/game_map_background_desktop.webp';
 
   @override
   Widget build(BuildContext context) {
@@ -57,6 +56,19 @@ class _MapContentState extends State<MapContent> {
             slots: slots,
             unlockedUpTo: widget.unlockedUpTo,
           ),
+          Positioned(
+                      top: 50,
+                      left:0,
+                      right:0,
+                      child: SizedBox(
+                        width: 50,
+                        child: Center(
+                          child: LevelPill(
+                            levelNumber: widget.unlockedUpTo,
+                          ),
+                        ),
+                      ),
+                    ),
         ],
       );
     });

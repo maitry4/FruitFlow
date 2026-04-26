@@ -1,11 +1,11 @@
 import 'package:go_router/go_router.dart';
-import 'package:layered/core/router/app_routes.dart';
-import 'package:layered/core/router/error_page.dart';
-import 'package:layered/core/services/hive_service.dart';
-import 'package:layered/features/game_map/presentation/pages/game_map_screen.dart';
-import 'package:layered/features/game_play/presentation/pages/game_play_screen.dart';
-import 'package:layered/features/initial/presentation/pages/onboarding_screen.dart';
-import 'package:layered/features/initial/presentation/pages/splash_screen.dart';
+import 'package:fruitflow/core/router/app_routes.dart';
+import 'package:fruitflow/core/router/error_page.dart';
+import 'package:fruitflow/core/services/hive_service.dart';
+import 'package:fruitflow/features/game_map/presentation/pages/game_map_screen.dart';
+import 'package:fruitflow/features/game_play/presentation/pages/game_play_screen.dart';
+import 'package:fruitflow/features/initial/presentation/pages/onboarding_screen.dart';
+import 'package:fruitflow/features/initial/presentation/pages/splash_screen.dart';
 
 final appRouter = GoRouter(
   initialLocation: AppRoutes.splash,
@@ -23,10 +23,10 @@ final appRouter = GoRouter(
         final seen = HiveService.instance.hasSeenOnboarding;
 
         if (seen) {
-          return AppRoutes.gameMap; // or wherever you want
+          return AppRoutes.gameMap;
         }
 
-        return null; // allow onboarding
+        return null; 
       },
       builder: (context, state) => const OnboardingScreen(),
     ),
@@ -48,7 +48,7 @@ final appRouter = GoRouter(
           return '${AppRoutes.gamePlay}?level=$unlocked';
         }
 
-        return null; // allow navigation
+        return null;
       },
       builder: (context, state) {
         final level =

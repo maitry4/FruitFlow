@@ -14,11 +14,19 @@ class GameMapView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<GameMapCubit, GameMapState>(
       builder: (context, state) => Scaffold(
-        body: switch (state) {
-          GameMapLoading() => const _LoadingView(),
-          GameMapLoaded(:final unlockedUpTo) =>
-            MapContent(unlockedUpTo: unlockedUpTo),
-        },
+        body: TweenAnimationBuilder<double>(
+          duration: const Duration(milliseconds: 2000),
+          tween: Tween(begin: 1.1, end: 1.0),
+          builder: (context, scale, child) {
+            return Transform.scale(scale: scale, child: child);
+          },
+          child: switch (state) {
+            GameMapLoading() => const _LoadingView(),
+            GameMapLoaded(:final unlockedUpTo) => MapContent(
+              unlockedUpTo: unlockedUpTo,
+            ),
+          },
+        ),
       ),
     );
   }

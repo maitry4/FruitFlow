@@ -1,9 +1,9 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:layered/core/services/hive_service.dart';
-import 'package:layered/features/game_play/domain/ui_level.dart';
-import 'package:layered/features/game_play/presentation/cubit/level_generator.dart';
-import 'package:layered/features/game_play/domain/tube.dart';
+import 'package:fruitflow/core/services/hive_service.dart';
+import 'package:fruitflow/features/game_play/domain/ui_level.dart';
+import 'package:fruitflow/features/game_play/presentation/cubit/level_generator.dart';
+import 'package:fruitflow/features/game_play/domain/tube.dart';
 
 part 'game_play_state.dart';
 
@@ -14,9 +14,35 @@ class GamePlayCubit extends Cubit<GamePlayState> {
     emit(const GamePlayLoading());
     try {
       final level = LevelGenerator.generate(levelNumber);
-      emit(GamePlayLoaded(level: level));
+      emit(GamePlayLoaded(level: level, history: const []));
     } catch (e) {
       emit(GamePlayError(message: e.toString()));
+    }
+  }
+
+  void reset() {
+    if (state is GamePlayLoaded) {
+      loadLevel((state as GamePlayLoaded).level.levelNumber);
+    }
+  }
+
+  void undo() {
+    final currentState = state;
+    if (currentState is GamePlayLoaded && currentState.history.isNotEmpty) {
+      final newHistory = List<List<Tube>>.from(currentState.history);
+      final previousTubes = newHistory.removeLast();
+
+      final newLevel = UILevel(
+        levelNumber: currentState.level.levelNumber,
+        tubes: previousTubes,
+        numColors: currentState.level.numColors,
+      );
+
+      emit(currentState.copyWith(
+        level: newLevel,
+        history: newHistory,
+        clearSelection: true,
+      ));
     }
   }
 
@@ -27,15 +53,12 @@ class GamePlayCubit extends Cubit<GamePlayState> {
     final selectedIdx = currentState.selectedTubeIndex;
 
     if (selectedIdx == null) {
-      // First Tap: Select the tube if it's not empty
       if (!currentState.level.tubes[index].isEmpty) {
         emit(currentState.copyWith(selectedTubeIndex: index));
       }
     } else if (selectedIdx == index) {
-      // Tap same tube: Deselect
       emit(currentState.copyWith(clearSelection: true));
     } else {
-      // Second Tap: Attempt to pour
       _handlePour(currentState, selectedIdx, index);
     }
   }
@@ -44,21 +67,18 @@ class GamePlayCubit extends Cubit<GamePlayState> {
     final tubes = List<Tube>.from(state.level.tubes);
     final source = tubes[fromIdx];
     final target = tubes[toIdx];
-
-    // 1. Get the fruit from the TOP of the source
     final fruitToMove = source.top;
 
-    // 2. Validate: Source not empty AND Target can receive this specific fruit
     if (fruitToMove != null && target.canReceive(fruitToMove)) {
-      
-      // OPTIONAL: In many games, we move ALL matching consecutive fruits from the top.
-      // For simplicity, let's move one at a time first, or use a loop:
+      // Save current state to history before making the move
+      final updatedHistory = List<List<Tube>>.from(state.history)
+        ..add(state.level.tubes);
+
       var tempSource = source;
       var tempTarget = target;
-      final colorToMove = fruitToMove;
 
-      // Move as many as possible that match the color and fit in the target
-      while (tempSource.top == colorToMove && tempTarget.canReceive(colorToMove)) {
+      // Pour all matching consecutive fruits
+      while (tempSource.top == fruitToMove && tempTarget.canReceive(fruitToMove)) {
         tempTarget = tempTarget.add(tempSource.top!);
         tempSource = tempSource.pop();
       }
@@ -72,16 +92,16 @@ class GamePlayCubit extends Cubit<GamePlayState> {
         numColors: state.level.numColors,
       );
 
-      emit(state.copyWith(level: newLevel, clearSelection: true));
+      emit(state.copyWith(
+        level: newLevel,
+        history: updatedHistory,
+        clearSelection: true,
+      ));
 
-      // 3. Check win condition: All tubes are either empty or complete
       if (tubes.every((t) => t.isSorted)) {
         _handleWin(state.level.levelNumber);
       }
     } else {
-      // 4. Invalid move:
-      // If the user tapped a different non-empty tube, select that instead.
-      // Otherwise, just deselect.
       if (!tubes[toIdx].isEmpty) {
         emit(state.copyWith(selectedTubeIndex: toIdx));
       } else {
@@ -89,13 +109,9 @@ class GamePlayCubit extends Cubit<GamePlayState> {
       }
     }
   }
+
   void _handleWin(int currentLevel) {
-    // Unlock next level in Hive
-    // final nextLevel = currentLevel + 1;
-    // if (nextLevel > HiveService.instance.unlockedUpTo) {
-       // Assuming HiveService has a method to update progress
-       HiveService.instance.unlockNextLevel(currentLevel); 
-    // }
+      HiveService.instance.unlockNextLevel(currentLevel);
     emit(GamePlayVictory(levelNumber: currentLevel));
   }
 }

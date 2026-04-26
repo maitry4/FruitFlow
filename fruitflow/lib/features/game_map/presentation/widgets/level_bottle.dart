@@ -73,14 +73,14 @@ class _LevelBottleState extends State<LevelBottle>
             alignment: Alignment.center,
             children: [
               Positioned.fill(child: _BottleImage(isUnlocked: widget.isUnlocked)),
-              Positioned(
-                bottom: s * 0.04,
-                child: LevelBadge(
-                  number: widget.levelNumber,
-                  isUnlocked: widget.isUnlocked,
-                  fontSize: s * 0.18,
+              if(widget.isUnlocked)
+                Positioned(
+                  bottom: s * 0.04,
+                  child: LevelBadge(
+                    number: widget.levelNumber,
+                    fontSize: s * 0.18,
+                  ),
                 ),
-              ),
             ],
           ),
         ),
@@ -100,7 +100,7 @@ class _BottleImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Image.asset(
-      isUnlocked ? 'assets/unlocked_bottle.webp' : 'assets/locked_bottle.webp',
+      isUnlocked ? 'assets/map/unlocked_bottle.webp' : 'assets/map/locked_bottle.webp',
       fit: BoxFit.contain,
       color: isUnlocked ? null : Colors.white.withOpacity(0.65),
       colorBlendMode: isUnlocked ? null : BlendMode.modulate,

@@ -8,19 +8,15 @@ class HiveService {
   HiveService._();
   static final HiveService instance = HiveService._();
 
-  // ── Box names ─────────────────────────────────────────────────────────────
   static const _kOnboardingBox = 'onboarding';
   static const _kProgressBox   = 'progress';
 
-  // ── Box keys ──────────────────────────────────────────────────────────────
   static const _kSeenOnboardingKey = 'has_seen_onboarding';
   static const _kUnlockedUpToKey   = 'unlocked_up_to';
 
-  // ── Internal box references ───────────────────────────────────────────────
   late final Box<bool> _onboardingBox;
   late final Box<int>  _progressBox;
 
-  // ── Initialisation ────────────────────────────────────────────────────────
 
   /// Must be called once in [main] before [runApp].
   static Future<void> init() async {
@@ -30,7 +26,6 @@ class HiveService {
     self._progressBox   = await Hive.openBox<int>(_kProgressBox);
   }
 
-  // ── Onboarding ────────────────────────────────────────────────────────────
 
   bool get hasSeenOnboarding =>
       _onboardingBox.get(_kSeenOnboardingKey, defaultValue: false) ?? false;
@@ -38,7 +33,6 @@ class HiveService {
   Future<void> markOnboardingSeen() =>
       _onboardingBox.put(_kSeenOnboardingKey, true);
 
-  // ── Progress ──────────────────────────────────────────────────────────────
 
   /// Returns the highest level the player has unlocked (1-based).
   /// Defaults to 1 so the first level is always available.

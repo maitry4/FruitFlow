@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:fruitflow/core/responsive/responsive_config.dart';
 import 'package:fruitflow/features/initial/presentation/cubit/splash_cubit.dart';
 
 class SplashScreen extends StatelessWidget {
@@ -65,16 +64,19 @@ class _SplashViewState extends State<_SplashView> {
 
 class _SplashImage extends StatelessWidget {
   final String assetPath;
-
   const _SplashImage({required this.assetPath});
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.sizeOf(context).width;
-    final isLargeScreen = screenWidth >= AppBreakpoints.desktop;
-
-    return Responsive(
-      maxWidth: isLargeScreen ? AppBreakpoints.desktop : double.infinity,
+    return TweenAnimationBuilder<double>(
+      duration: const Duration(milliseconds: 3500), // Long, slow move
+      tween: Tween(begin: 1.0, end: 1.1), // Slow zoom in by 10%
+      builder: (context, scale, child) {
+        return Transform.scale(
+          scale: scale,
+          child: child,
+        );
+      },
       child: SizedBox.expand(
         child: Image.asset(assetPath, fit: BoxFit.cover),
       ),
