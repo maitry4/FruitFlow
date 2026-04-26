@@ -1,5 +1,6 @@
 # 🍓 FruitFlow
 
+Play Live at: https://fruitflow-ce8cd.web.app
 A cross-platform fruit sorting puzzle game built with Flutter using a clean layered architecture and BLoC state management.
 
 FruitFlow challenges players to sort fruit slabs into bottles following stacking rules across 100 progressively difficult levels — fully offline.
