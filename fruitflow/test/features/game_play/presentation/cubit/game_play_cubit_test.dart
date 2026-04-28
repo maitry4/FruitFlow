@@ -57,15 +57,10 @@ void main() {
       cubit.loadLevel(1);
       final initialState = cubit.state as GamePlayLoaded;
       
-      // Manually find a valid pour to create history
-      // (This is a bit tricky with random levels, but we can just test the history logic)
       
-      // Force a state with history for testing undo directly
       final tubes = initialState.level.tubes;
       final historyTubes = [List<Tube>.from(tubes)];
-      
-      // We can't easily force a move without a valid one, 
-      // but we can check if history is handled in undo.
+    
     });
 
     test('reset reloads the level', () {
@@ -77,8 +72,6 @@ void main() {
       
       expect(state2.level.levelNumber, 1);
       expect(state2.history, isEmpty);
-      // Since generation is random, levels might differ or be the same depending on seed.
-      // But history should definitely be cleared.
     });
   });
 }

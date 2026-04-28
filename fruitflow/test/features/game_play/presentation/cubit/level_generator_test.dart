@@ -25,7 +25,7 @@ void main() {
     });
 
     test('generated level is not already solved', () {
-      for (int i = 1; i <= 5; i++) {
+      for (int i = 1; i <= 100; i++) {
         final level = LevelGenerator.generate(i);
         final isSolved = level.tubes.where((t) => !t.isEmpty).every((t) => t.isComplete);
         expect(isSolved, isFalse, reason: 'Level $i should not be pre-solved');
